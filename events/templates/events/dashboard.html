@@ -1,0 +1,83 @@
+{% extends "events/base.html" %}
+{% block content %}
+<div class="space-y-6">
+
+  <h1 class="text-2xl font-bold">Organizer Dashboard</h1>
+
+  <!-- 📊 Stats Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-white">
+    <div onclick="filterEvents('all')" class="bg-blue-600 p-4 rounded cursor-pointer hover:bg-blue-700">
+      <h2 class="text-lg font-semibold">Total Events</h2>
+      <p class="text-2xl">{{ total_events }}</p>
+    </div>
+    <div class="bg-green-600 p-4 rounded">
+      <h2 class="text-lg font-semibold">Participants</h2>
+      <p class="text-2xl">{{ total_participants }}</p>
+    </div>
+    <div onclick="filterEvents('upcoming')" class="bg-yellow-500 p-4 rounded cursor-pointer hover:bg-yellow-600">
+      <h2 class="text-lg font-semibold">Upcoming Events</h2>
+      <p class="text-2xl">{{ upcoming_events }}</p>
+    </div>
+    <div onclick="filterEvents('past')" class="bg-red-600 p-4 rounded cursor-pointer hover:bg-red-700">
+      <h2 class="text-lg font-semibold">Past Events</h2>
+      <p class="text-2xl">{{ past_events }}</p>
+    </div>
+  </div>
+
+  <!-- 📅 Today’s Events -->
+  <div>
+    <h2 class="text-xl font-bold mb-2 mt-6">Today’s Events</h2>
+    {% if todays_events %}
+      <ul class="list-disc pl-6">
+        {% for event in todays_events %}
+          <li>
+            <strong>{{ event.name }}</strong> at {{ event.time }} in {{ event.location }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-gray-600">No events scheduled for today.</p>
+    {% endif %}
+  </div>
+
+  <!-- 🗂 Interactive Event List -->
+  <div>
+    <h2 class="text-xl font-bold mb-2 mt-6">Events</h2>
+    <table class="min-w-full bg-white rounded shadow" id="eventTable">
+      <thead>
+        <tr class="bg-gray-100 border-b">
+          <th class="text-left p-3">Name</th>
+          <th class="text-left p-3">Date</th>
+          <th class="text-left p-3">Category</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in all_events %}
+        <tr class="border-b hover:bg-gray-50"
+            data-date="{{ event.date }}"
+            data-type="{% if event.date > today %}upcoming{% elif event.date < today %}past{% else %}today{% endif %}">
+          <td class="p-3">{{ event.name }}</td>
+          <td class="p-3">{{ event.date }}</td>
+          <td class="p-3">{{ event.category.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  function filterEvents(type) {
+    const rows = document.querySelectorAll("#eventTable tbody tr");
+    rows.forEach(row => {
+      const eventType = row.dataset.type;
+      if (type === 'all' || eventType === type) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+</script>
+{% endblock %}

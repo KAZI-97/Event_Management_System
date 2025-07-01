@@ -1,0 +1,48 @@
+{% extends "events/base.html" %}
+
+{% block content %}
+<section class="relative isolate overflow-hidden bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 py-24 sm:py-32 rounded-3xl shadow-xl mb-12">
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-white/20 via-white/10 to-transparent opacity-30 blur-xl mt-8"></div>
+
+  <div class="max-w-4xl mx-auto px-6 text-center relative z-10 mt-8">
+    <h1 class="text-2xl sm:text-5xl font-normal tracking-tight text-black drop-shadow-md">
+      Welcome to the Event Management System
+    </h1>
+    <p class="mt-4 text-lg sm:text-xl text-white/90 max-w-2xl mx-auto">
+      Plan, manage, and track all your events in one place. Streamline your workflow and deliver unforgettable experiences.
+    </p>
+    <div class="mt-8 flex justify-center">
+      <a href="{% url 'event-list' %}" class="inline-block bg-white text-blue-700 font-semibold px-6 py-3 rounded-full shadow hover:bg-blue-100 transition">
+        Browse Events
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="pb-12">
+  {% if events %}
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
+      {% for event in events %}
+        <div class="bg-white rounded-xl border border-gray-200 p-6 transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_20px_4px_rgba(255,215,0,0.6)] hover:border-yellow-100">
+
+          <div class="flex justify-between items-start mb-3">
+            <h6 class="text-sm font-medium text-blue-600">{{ event.category.name }}</h6>
+            <p class="text-sm text-gray-500">📅 {{ event.date }}</p>
+          </div>
+          <h3 class="text-xl font-semibold text-blue-700 mb-2 text-center">{{ event.name }}</h3>
+          <p class="text-gray-600 text-center mb-4">{{ event.description|truncatewords:20 }}</p>
+          <a href="{% url 'event-detail' event.id %}" class="block text-center text-red-500 border border-red-500 rounded-lg py-2 hover:bg-red-500 hover:text-white transition">
+            View Details
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500">No events available at the moment.</p>
+  {% endif %}
+</section>
+
+{% endblock %}
+
+
+

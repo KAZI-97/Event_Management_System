@@ -1,0 +1,26 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment folder
+venv/
+env/
+.task_env/
+
+# Django generated static/media files
+media/
+staticfiles/
+
+# Secrets / environment variables
+.env
+
+# Node modules (if using Tailwind or npm)
+node_modules/
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db

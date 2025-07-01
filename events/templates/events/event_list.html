@@ -1,0 +1,44 @@
+{% extends "events/base.html" %}
+{% block content %}
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">Events</h1>
+  
+  <form method="GET" class="mb-6">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by name or location"
+           class="border px-3 py-2 rounded w-full max-w-md" />
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded mt-2">Search</button>
+  </form>
+
+  <a href="{% url 'event-create' %}" class="inline-block mb-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add Event</a>
+
+  {% if events %}
+  <table class="min-w-full bg-white rounded shadow">
+    <thead>
+      <tr class="bg-gray-100 border-b">
+        <th class="text-left p-3">Name</th>
+        <th class="text-left p-3">Category</th>
+        <th class="text-left p-3">Date</th>
+        <th class="text-left p-3">Participants</th>
+        <th class="p-3">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in events %}
+      <tr class="border-b hover:bg-gray-50">
+        <td class="p-3"><a href="{% url 'event-detail' event.pk %}" class="text-blue-600 hover:underline">{{ event.name }}</a></td>
+        <td class="p-3">{{ event.category.name }}</td>
+        <td class="p-3">{{ event.date }}</td>
+        <td class="p-3">{{ event.participant_set.count }}</td>
+        <td class="p-3 text-center space-x-2">
+          <a href="{% url 'event-edit' event.pk %}" class="text-yellow-600 hover:underline">Edit</a>
+          <a href="{% url 'event-delete' event.pk %}" class="text-red-600 hover:underline">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p>No events found.</p>
+  {% endif %}
+</div>
+{% endblock %}
