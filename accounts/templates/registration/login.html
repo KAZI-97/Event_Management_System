@@ -9,7 +9,7 @@
     {% endfor %}
   {% endif %}
 
-  <form method="post">
+  <form method="post" action="{% url 'sign-in' %}">
     {% csrf_token %}
     <div class="mb-4">
       <label for="username" class="block font-medium">Username:</label>

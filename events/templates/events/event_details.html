@@ -1,7 +1,17 @@
 {% extends "events/base.html" %}
+{% load static %}
 {% block content %}
 <div class="container mx-auto p-4 max-w-3xl">
   <h1 class="text-3xl font-bold mb-4">{{ event.name }}</h1>
+  {% if event.event_image %}
+  <img src="{{ event.event_image.url }}" 
+       alt="{{ event.name }}" 
+       class="w-full h-auto mb-6 rounded-lg shadow">
+{% else %}
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgJw-vxpsQbYZhmNYZeSeloIFhLEzclHkBug&s" 
+       alt="Default Image" 
+       class="w-full h-auto mb-6 rounded-lg shadow">
+{% endif %}
 
   <div class="mb-6">
     <p><strong>Category:</strong> {{ event.category.name }}</p>
@@ -11,19 +21,39 @@
     <p><strong>Description:</strong> {{ event.description }}</p>
   </div>
 
-  <h2 class="text-xl font-semibold mb-3">Participants ({{ event.participant_set.count }})</h2>
-  <ul class="list-disc pl-5">
-    {% for participant in event.participant_set.all %}
-      <li>{{ participant.name }} ({{ participant.email }})</li>
+  <h2 class="text-xl font-semibold mb-3">
+    RSVPs ({{ event.rsvped_users.count }})
+  </h2>
+  <ul class="list-disc pl-5 mb-6">
+    {% for participant in event.rsvped_users.all %}
+      <li>{{ participant.first_name }} {{ participant.last_name }} ({{ participant.email }})</li>
     {% empty %}
-      <li>No participants registered.</li>
+      <li>No participants have RSVP'd.</li>
     {% endfor %}
   </ul>
 
-  <div class="mt-6 space-x-3">
-    <a href="{% url 'event-edit' event.pk %}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit</a>
-    <a href="{% url 'event-delete' event.pk %}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Delete</a>
-    <a href="{% url 'event-list' %}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Back to List</a>
-  </div>
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'rsvp-event' event.id %}">
+      {% csrf_token %}
+      {% if user in event.rsvped_users.all %}
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancel RSVP</button>
+      {% else %}
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">RSVP</button>
+      {% endif %}
+    </form>
+  {% else %}
+    <p class="mt-4">Please <a href="{% url 'sign-in' %}" class="text-blue-600 underline">login</a> to RSVP.</p>
+  {% endif %}
+
+  
+  {% if user.groups.all|length > 0 %}
+    {% if user.groups.all.0.name == "Admin" or user.groups.all.0.name == "Organizer" %}
+      <div class="mt-6 space-x-3">
+        <a href="{% url 'event-edit' event.pk %}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit</a>
+        <a href="{% url 'event-delete' event.pk %}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Delete</a>
+        <a href="{% url 'event-list' %}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Back to List</a>
+      </div>
+    {% endif %}
+  {% endif %}
 </div>
 {% endblock %}

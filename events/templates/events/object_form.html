@@ -2,7 +2,9 @@
 {% block content %}
 <div class="max-w-lg mx-auto p-4 bg-white rounded shadow">
   <h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
-  <form method="POST" novalidate>
+
+  <!-- IMPORTANT: Add enctype for image upload -->
+  <form method="POST" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">

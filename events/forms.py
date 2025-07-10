@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event, Category, Participant
+from .models import Event, Category
 
 class StyledFormMixin:
     """ Mixing to apply style to form field"""
@@ -57,18 +57,18 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['name', 'description', 'date', 'time', 'location', 'category']
+        fields = ['name', 'description', 'date', 'time', 'location', 'category','event_image']
 
 
-class ParticipantForm(forms.ModelForm):
-    name = forms.CharField(label='Participant Name')
-    email = forms.EmailField(label='Email Address')
-    events = forms.ModelMultipleChoiceField(
-        label='Select Events',
-        queryset=Event.objects.all(),
-        widget=forms.CheckboxSelectMultiple()
-    )
+# class ParticipantForm(forms.ModelForm):
+#     name = forms.CharField(label='Participant Name')
+#     email = forms.EmailField(label='Email Address')
+#     events = forms.ModelMultipleChoiceField(
+#         label='Select Events',
+#         queryset=Event.objects.all(),
+#         widget=forms.CheckboxSelectMultiple()
+#     )
 
-    class Meta:
-        model = Participant
-        fields = ['name', 'email', 'events']
+#     class Meta:
+#         model = Participant
+#         fields = ['name', 'email', 'events']
