@@ -28,7 +28,7 @@
         <td class="p-3"><a href="{% url 'event-detail' event.pk %}" class="text-blue-600 hover:underline">{{ event.name }}</a></td>
         <td class="p-3">{{ event.category.name }}</td>
         <td class="p-3">{{ event.date }}</td>
-        <td class="p-3">{{ event.participant_set.count }}</td>
+        <td class="p-3">{{ event.rsvped_users.count }}</td>
         <td class="p-3 text-center space-x-2">
           <a href="{% url 'event-edit' event.pk %}" class="text-yellow-600 hover:underline">Edit</a>
           <a href="{% url 'event-delete' event.pk %}" class="text-red-600 hover:underline">Delete</a>
