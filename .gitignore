@@ -6,7 +6,7 @@ __pycache__/
 venv/
 env/
 .task_env/
-
+ems_env/
 # Django generated static/media files
 media/
 staticfiles/
