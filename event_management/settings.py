@@ -27,6 +27,7 @@ SECRET_KEY = "django-insecure-j#66ff!d+6+i6!-)j)robr5#3d(@1@4k$*=f_(0f2tf_m@bvs4
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+AUTH_USER_MODEL = 'accounts.CustomUser'
 CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com', 'http://127.0.0.1:8000']
 
 
@@ -117,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Dhaka"
 
 USE_I18N = True
 

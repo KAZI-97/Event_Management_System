@@ -11,10 +11,10 @@
     </div>
   {% endif %}
 
-  <form method="post" class="space-y-6"> <!-- Increased spacing here -->
+  <form method="post" class="space-y-6"> 
     {% csrf_token %}
     {% for field in form %}
-      <div class="space-y-1"> <!-- Add spacing between label, field, help text, and errors -->
+      <div class="space-y-1"> 
         {{ field.label_tag }}
         {{ field }}
         {% if field.help_text %}
