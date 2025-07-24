@@ -23,6 +23,12 @@
       <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Login</button>
     </div>
   </form>
+  <p class="mt-4 text-center text-sm text-gray-600">
+    <a href="{% url 'password_reset' %}" class="text-blue-600 hover:underline">
+      Forgot password?
+    </a>
+  </p>
+  
 
   <p class="mt-4 text-center">Don't have an account?
     <a href="{% url 'sign-up' %}" class="text-blue-500 underline">Register here</a>

@@ -7,6 +7,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    # path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
+
     path("events/",include("events.urls")),
     path('', include('events.urls')) 
 ] +  debug_toolbar_urls()

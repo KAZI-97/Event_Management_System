@@ -5,13 +5,16 @@ from .forms import EventForm, CategoryForm
 from datetime import date
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.views.generic import DetailView,ListView,TemplateView
+from django.utils.decorators import method_decorator
+from django.contrib.auth import get_user_model
 
 def group_required(group_name):
     def check(user):
@@ -26,7 +29,7 @@ admin_required = group_required('Admin')
 organizer_required = group_required('Organizer')
 participant_required = group_required('Participant')
 
-
+User = get_user_model()
 
 
 def event_list(request):
@@ -229,3 +232,38 @@ def rsvp_event(request, event_id):
             print(f"Failed to send RSVP email: {e}")
 
     return redirect('event-detail', pk=event_id)
+
+# Creating Class Base view from here
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'events/event_details.html'
+    context_object_name = 'event'
+
+    def get_queryset(self):
+        return Event.objects.prefetch_related('rsvped_users').select_related('category')
+
+@method_decorator([login_required, user_passes_test(group_required('Organizer'))], name='dispatch')
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'events/category_list.html'
+    context_object_name = 'categories'
+
+    def get_queryset(self):
+        return Category.objects.annotate(event_count=Count('event')).all()
+
+@method_decorator([login_required, user_passes_test(group_required('Organizer'))], name='dispatch')
+class OrganizerDashboardView(TemplateView):
+    template_name = 'events/dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = timezone.now().date()
+
+        context['total_events'] = Event.objects.count()
+        context['upcoming_events'] = Event.objects.filter(date__gt=today).count()
+        context['past_events'] = Event.objects.filter(date__lt=today).count()
+        context['todays_events'] = Event.objects.filter(date=today)
+        context['all_events'] = Event.objects.all()
+        context['today'] = today
+
+        return context
